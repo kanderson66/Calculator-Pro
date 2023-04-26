@@ -49,7 +49,7 @@ public class HistoryItemPanel extends JPanel
     static
     {
         InputStream inputStream = CalculatorProPlugin.class.getClassLoader().getResourceAsStream("clipboard_icon.png");
-        BufferedImage clipboardIcon = null;
+        BufferedImage clipboardIcon;
         try {
             if (inputStream==null){
                 System.out.println("Error- cant find clipboard_icon");

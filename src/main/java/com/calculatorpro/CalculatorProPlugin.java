@@ -109,7 +109,7 @@ public class CalculatorProPlugin extends Plugin {
 		CalculatorPluginPanel panel = new CalculatorPluginPanel();
 
 		InputStream inputStream = getClass().getResourceAsStream("/icon.png");
-		BufferedImage icon = null;
+		BufferedImage icon;
 
 		try {
 			if (inputStream == null){
@@ -776,11 +776,22 @@ public class CalculatorProPlugin extends Plugin {
 					} else {
 						x = parseFactor();
 					}
-					if (func.equals("sqrt")) x = Math.sqrt(x);
-					else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
-					else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
-					else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
-					else throw new RuntimeException("Unknown function: " + func);
+					switch (func) {
+						case "sqrt":
+							x = Math.sqrt(x);
+							break;
+						case "sin":
+							x = Math.sin(Math.toRadians(x));
+							break;
+						case "cos":
+							x = Math.cos(Math.toRadians(x));
+							break;
+						case "tan":
+							x = Math.tan(Math.toRadians(x));
+							break;
+						default:
+							throw new RuntimeException("Unknown function: " + func);
+					}
 				} else {
 					throw new RuntimeException("Unexpected: " + (char) ch);
 				}

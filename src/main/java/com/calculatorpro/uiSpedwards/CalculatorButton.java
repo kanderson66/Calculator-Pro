@@ -26,7 +26,6 @@ package com.calculatorpro.uiSpedwards;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import lombok.extern.slf4j.Slf4j;
 

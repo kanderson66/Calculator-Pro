@@ -323,14 +323,11 @@ public class CalculatorPanel extends JPanel
 
         //convert components back into 1 string, update displayField input incase changed
         displayField.input="";
-        for(int n=0;n<length;n++){
-            if(components[n].length() > 3)
-            {
-                displayField.input += df.format(Double.parseDouble(components[n]));
-            }
-            else
-            {
-                displayField.input+=components[n];
+        for (String component : components) {
+            if (component.length() > 3) {
+                displayField.input += df.format(Double.parseDouble(component));
+            } else {
+                displayField.input += component;
             }
         }
         return true;
