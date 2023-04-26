@@ -694,8 +694,8 @@ public class CalculatorProPlugin extends Plugin {
 
 		//convert components back into 1 string
 		output="";
-		for(int n=0;n<length;n++){
-			output+=components[n];
+		for (String component : components) {
+			output += component;
 		}
 
 		//add missing ) if needed
