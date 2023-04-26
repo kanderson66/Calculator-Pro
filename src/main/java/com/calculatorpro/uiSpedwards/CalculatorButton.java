@@ -52,13 +52,13 @@ public class CalculatorButton extends JButton
         setFont(new Font("Arial", Font.BOLD, 20));
     }
 
-    public CalculatorButton(Icon icon)
-    {
-        super(icon);
-
-        setPreferredSize(PREFERRED_SIZE);
-        //Cyborger1 edit
-        setMinimumSize(MINIMUM_SIZE);
-        //end Cyborger1 edit
-    }
+//    public CalculatorButton(Icon icon)
+//    {
+//        super(icon);
+//
+//        setPreferredSize(PREFERRED_SIZE);
+//        //Cyborger1 edit
+//        setMinimumSize(MINIMUM_SIZE);
+//        //end Cyborger1 edit
+//    }
 }

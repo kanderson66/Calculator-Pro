@@ -177,11 +177,11 @@ public class CalculatorProPlugin extends Plugin {
 			//todo: check if custom equation changed (and != ""), output to chat (no !calc command needed)
 			//client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says ", null);
 
-			if (!config.panelActive() && panelActive==true){
+			if (!config.panelActive() && panelActive){
 				clientToolbar.removeNavigation(navButton);
 				panelActive = false;
 			}
-			if (config.panelActive() && panelActive==false){
+			if (config.panelActive() && !panelActive){
 				clientToolbar.addNavigation(navButton);
 				panelActive = true;
 			}

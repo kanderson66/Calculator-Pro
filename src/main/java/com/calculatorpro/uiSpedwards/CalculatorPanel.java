@@ -233,6 +233,13 @@ public class CalculatorPanel extends JPanel
                         break;
                 }
             }
+            //check if previous component was ###. with no number after decimal (remove last decimal)
+            //# of length 1 does not have a .
+            if(n != 0 && components[n - 1].length() != 1) {
+                if (components[n - 1].charAt(components[n - 1].length() - 1) == '.') {
+                    components[n - 1] = components[n - 1].substring(0, components[n - 1].length() - 1);
+                }
+            }
             //  +*/^) cant come after +-*/^( or start of equation
             switch(components[n]){
                 case "+":
@@ -240,16 +247,8 @@ public class CalculatorPanel extends JPanel
                 case "/":
                 case "^":
                 case ")":
-                    if(n != 0){
-                        //check if previous component was ###. with no number after decimal (remove last decimal)
-                        //# of length 1 does not have a .
-                        if (components[n-1].length() != 1 ) {
-                            if (components[n - 1].substring(components[n - 1].length() - 1, components[n - 1].length()).equals("."))
-                            {
-                                components[n - 1] = components[n - 1].substring(0, components[n - 1].length() - 1);
-                                break;
-                            }
-                        }
+                    if (n!=0)
+                    {
                         switch (components[n-1]){
                             case "+":
                             case "-":
@@ -261,35 +260,32 @@ public class CalculatorPanel extends JPanel
                             default:
                                 break;
                         }
+                        break;
                     }
                     //cant have math symbol at start of equation (except ( or -)
                     else
                     {
                         return false;
                     }
-            }
-            //check proper input before (
-            if(components[n].equals("(") && n!=0){
-                //check if last digit is ., if so, delete . and add *  (4.*3 change to 4*3)
-                if (components[n - 1].substring(components[n-1].length()-1, components[n-1].length()).equals("."))
-                {
-                    components[n-1] = components[n-1].substring(0,components[n-1].length()-1);
-                    components[n] = "*(";
+                //check proper input before (
+                case "(":
+                    if (n!=0)
+                    {
+                        switch (components[n-1]){
+                            case "+":
+                            case "-":
+                            case "*":
+                            case "/":
+                            case "^":
+                            case "(":
+                                break;
+                            //add * before ( if needed  ("56(4-2)" changes to "56*(4-2)")
+                            default:
+                                components[n] = "*(";
+                                break;
+                        }
+                    }
                     break;
-                }
-                //add * before ( if needed  ("56(4-2)" changes to "56*(4-2)")
-                switch (components[n-1]){
-                    case "+":
-                    case "-":
-                    case "*":
-                    case "/":
-                    case "^":
-                    case "(":
-                        break;
-                    default:
-                        components[n] = "*(";
-                        break;
-                }
             }
 
             //check . is before at least 1 # & only 1 in component
@@ -330,9 +326,6 @@ public class CalculatorPanel extends JPanel
         for(int n=0;n<length;n++){
             if(components[n].length() > 3)
             {
-                //todo: check if this change is fine
-//                String change = df.format(Double.parseDouble(components[n]));
-//                displayField.input += change;
                 displayField.input += df.format(Double.parseDouble(components[n]));
             }
             else

@@ -94,7 +94,7 @@ public class DisplayField extends JTextField
                 //# is a single digit, cant be a .
                 if (components[components.length-1].length() != 1 ) {
                     //# ended in . (remove it)
-                    if (components[components.length-1].substring(components[components.length-1].length()-1, components[components.length-1].length()).equals("."))
+                    if (components[components.length-1].charAt(components[components.length-1].length()-1) == '.')
                     {
                         components[components.length-1] = components[components.length-1].substring(0,components[components.length-1].length()-1);
                         break;
@@ -161,7 +161,6 @@ public class DisplayField extends JTextField
     {
         result = 0.0;
         input = "";
-        previousResult = "0";
         update();
     }
 
