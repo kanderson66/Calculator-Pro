@@ -48,20 +48,9 @@ public class HistoryItemPanel extends JPanel
 
     static
     {
-        InputStream inputStream = CalculatorProPlugin.class.getClassLoader().getResourceAsStream("clipboard_icon.png");
-        BufferedImage clipboardIcon;
-        try {
-            if (inputStream==null){
-                System.out.println("Error- cant find clipboard_icon");
-                CLIPBOARD_ICON = null;
-            } else{
-                clipboardIcon = ImageIO.read(inputStream);
-                clipboardIcon = ImageUtil.resizeImage(clipboardIcon,20,20);
-                CLIPBOARD_ICON = new ImageIcon(clipboardIcon);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BufferedImage clipboardIcon = ImageUtil.loadImageResource(CalculatorProPlugin.class, "/clipboard_icon.png");
+        clipboardIcon = ImageUtil.resizeImage(clipboardIcon,20,20);
+        CLIPBOARD_ICON = new ImageIcon(clipboardIcon);
     }
 
     public HistoryItemPanel(String line1, String line2)

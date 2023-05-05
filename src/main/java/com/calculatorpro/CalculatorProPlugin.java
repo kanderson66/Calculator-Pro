@@ -49,6 +49,7 @@ import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+import net.runelite.client.util.ImageUtil;
 
 @PluginDescriptor(
 		name = "Calculator Pro",
@@ -108,18 +109,7 @@ public class CalculatorProPlugin extends Plugin {
 
 		CalculatorPluginPanel panel = new CalculatorPluginPanel();
 
-		InputStream inputStream = getClass().getResourceAsStream("/icon.png");
-		BufferedImage icon;
-
-		try {
-			if (inputStream == null){
-				System.out.println("Error- cant find panel icon");
-				return;
-			}
-			icon = ImageIO.read(inputStream);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/icon.png");
 
 		navButton = NavigationButton.builder()
 				.tooltip("Calculator Pro")
