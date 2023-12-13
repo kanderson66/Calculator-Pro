@@ -115,7 +115,7 @@ public interface CalculatorProConfig extends Config {
 		return "tag1=123\noak=37.5\nexample=oak+tag1\n\n###\nInsert tags above this line, notes below this line"
 				+"\n\nTags should look like this:\n"
 				+"tagName=###\n\nWhere \"tagName\" is at least 1 letter, and can contain letters and numbers, but no symbols"
-				+"\n\nAnd \"###\" is a real number or equation (negative numbers, fractions and decimals are ok)"
+				+"\n\nAnd \"###\" is a real number or equation (negative numbers, scientific notation (33k), fractions and decimals are ok)"
 				+"\n\nYou can then reference these tags in your equation\n!calc 4*tagName";
 	}
 
