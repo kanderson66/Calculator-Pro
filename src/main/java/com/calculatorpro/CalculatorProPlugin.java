@@ -657,7 +657,7 @@ public class CalculatorProPlugin extends Plugin {
 				}
 			}
 
-			//if component contains a letter, its a tag (ignore math tags (sqrt, sin, cos, tan))
+			//if component contains a letter, its a tag or scientific notation (ignore math tags (sqrt, sin, cos, tan))
 			if(components[n].matches(".*[a-zA-Z]+.*")){
 				switch (components[n]){
 					case "sqrt":
@@ -666,6 +666,39 @@ public class CalculatorProPlugin extends Plugin {
 					case "tan":
 						break;
 					default:
+						//check for scientific notation
+						//component would be # ended in k m or b (10.6k)
+						String[] split = components[n].split("(?=[k|m|b])");
+
+						//check for possible scientific notation (### k)
+						if (split[0].matches("\\d+.+|\\d+") && split.length == 2) {
+
+							boolean isScientific = false;
+
+							//check if 2nd index is scientific notation
+							switch (split[1]) {
+								case "k":
+									components[n]= "(" + split[0] + "*1000)";
+									isScientific = true;
+									break;
+								case "m":
+									components[n]= "(" + split[0] + "*1000000)";
+									isScientific = true;
+									break;
+								case "b":
+									components[n]= "(" + split[0] + "*1000000000)";
+									isScientific = true;
+									break;
+								default:
+									break;
+							}
+							//dont check if is a tag if is scientific notation
+							if (isScientific){
+								break;
+							}
+						}
+
+						//check if is a tag
 						if (configTags.get(components[n])!=null){
 							components[n]=configTags.get(components[n]);
 						} else if(lvlTags.get(components[n])!=null){
