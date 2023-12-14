@@ -71,7 +71,7 @@ public class CalculatorProPlugin extends Plugin {
 
 	private static final String CALCULATE_STRING = "!calc";
 
-	//store xp values of each lvl (lvl 1-99)
+	//store xp values of each lvl (lvl 1-126)
 	final HashMap<String, String> lvlTags = new HashMap<>();
 	//store custom tags from config panel
 	final HashMap<String, String> configTags = new HashMap<>();
@@ -97,7 +97,7 @@ public class CalculatorProPlugin extends Plugin {
 
 	@Override
 	public void startUp() {
-		//load lvl xp tags (lvl 1-99)
+		//load lvl xp tags (lvl 1-126)
 		loadLvlTags();
 		//load runTime tags (default with a0-a9 with value 0)
 		loadRunTimeTags();
@@ -140,10 +140,10 @@ public class CalculatorProPlugin extends Plugin {
 	CalculatorProConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(CalculatorProConfig.class);
 	}
-	//load tags for xp at each lvl (lvl1-lvl99)
+	//load tags for xp at each lvl (lvl1-lvl126)
 	public void loadLvlTags(){
 		//Formula from Wiki 'Experience' page (see 'Formula')
-		for(Integer lvl = 1;lvl<100;lvl++){
+		for(Integer lvl = 1;lvl<127;lvl++){
 			lvlTags.put("lvl"+ lvl,Integer.toString(Integer.valueOf((int)eval("(1/8)*("+ lvl+"^2-"+ lvl+"+600*((2^("+ lvl+"/7)-2^(1/7)))/(2^(1/7)-1))-("+ lvl+"/10)"))));
 		}
 	}

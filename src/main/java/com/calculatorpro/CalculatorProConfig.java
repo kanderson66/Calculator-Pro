@@ -91,7 +91,7 @@ public interface CalculatorProConfig extends Config {
 				"You can clear all tags created through the chatbox, or only remove a certain tag:\n" +
 				"!calc !clear\n!calc !remove tagName\n\n" +
 				"There are some built-in tags:\n" +
-				"lvl1  --experience at lvl 1, up to\nlvl99\n" +
+				"lvl1  --experience at lvl 1, up to\nlvl126\n" +
 				"last  --result of last calculation\n\n" +
 				"Math functions such as ^2, sqrt, sin, cos, tan are also supported:\n" +
 				"!calc sqrt(9^3)\n\n" +
