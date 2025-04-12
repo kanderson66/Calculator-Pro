@@ -50,6 +50,10 @@ import net.runelite.client.ui.NavigationButton;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import net.runelite.client.util.ImageUtil;
+import net.runelite.api.Skill;	//to get current xp in a skill
+////todo auto equate
+//import net.runelite.client.chat.ChatMessageManager;
+//import net.runelite.api.ChatMessageType;
 
 @PluginDescriptor(
 		name = "Calculator Pro",
@@ -69,6 +73,10 @@ public class CalculatorProPlugin extends Plugin {
 	@Inject
 	private Client client;
 
+//	//todo auto equate
+//	@Inject
+//	private ChatMessageManager chatMessageManager;
+
 	private static final String CALCULATE_STRING = "!calc";
 
 	//store xp values of each lvl (lvl 1-126)
@@ -77,6 +85,8 @@ public class CalculatorProPlugin extends Plugin {
 	final HashMap<String, String> configTags = new HashMap<>();
 	//store tags made by user during runtime (last, etc)
 	final HashMap<String, String> runTimeTags = new HashMap<>();
+	//store skill current xp values
+	final HashMap<String, String> SkillTags = new HashMap<>();
 
 	//store whether the panel is currently active or not
 	boolean panelActive = false;
@@ -99,6 +109,8 @@ public class CalculatorProPlugin extends Plugin {
 	public void startUp() {
 		//load lvl xp tags (lvl 1-126)
 		loadLvlTags();
+		//load skill xp values
+		loadSkillTags();
 		//load runTime tags (default with a0-a9 with value 0)
 		loadRunTimeTags();
 		//load tags & equation from Config text boxes
@@ -148,6 +160,57 @@ public class CalculatorProPlugin extends Plugin {
 		}
 	}
 
+	//load Skill tags, all starting at 0xp
+	public void loadSkillTags(){
+		SkillTags.put("myattack","0");
+		SkillTags.put("myatt","0");
+		SkillTags.put("myhitpoints","0");
+		SkillTags.put("myhp","0");
+		SkillTags.put("mymining","0");
+		SkillTags.put("mymine","0");
+		SkillTags.put("mystrength","0");
+		SkillTags.put("mystr","0");
+		SkillTags.put("myagility","0");
+		SkillTags.put("myagil","0");
+		SkillTags.put("mysmithing","0");
+		SkillTags.put("mysmith","0");
+		SkillTags.put("mydefence","0");
+		SkillTags.put("mydef","0");
+		SkillTags.put("myherblore","0");
+		SkillTags.put("myherb","0");
+		SkillTags.put("myfishing","0");
+		SkillTags.put("myfish","0");
+		SkillTags.put("myranged","0");
+		SkillTags.put("myrange","0");
+		SkillTags.put("myranging","0");
+		SkillTags.put("mythieving","0");
+		SkillTags.put("mythieve","0");
+		SkillTags.put("mycooking","0");
+		SkillTags.put("mycook","0");
+		SkillTags.put("myprayer","0");
+		SkillTags.put("mypray","0");
+		SkillTags.put("mycrafting","0");
+		SkillTags.put("mycraft","0");
+		SkillTags.put("myfiremaking","0");
+		SkillTags.put("myfm","0");
+		SkillTags.put("mymagic","0");
+		SkillTags.put("mymage","0");
+		SkillTags.put("myfletching","0");
+		SkillTags.put("myfletch","0");
+		SkillTags.put("mywoodcutting","0");
+		SkillTags.put("mywc","0");
+		SkillTags.put("myrunecrafting","0");
+		SkillTags.put("myrc","0");
+		SkillTags.put("myslayer","0");
+		SkillTags.put("myslay","0");
+		SkillTags.put("myfarming","0");
+		SkillTags.put("myfarm","0");
+		SkillTags.put("myconstruction","0");
+		SkillTags.put("mycon","0");
+		SkillTags.put("myhunter","0");
+		SkillTags.put("myhunt","0");
+	}
+
 	//reserve last and a0-a9 tags for autoTag (not a hard reserve)
 	private void loadRunTimeTags(){
 		runTimeTags.put("last","0");
@@ -164,8 +227,15 @@ public class CalculatorProPlugin extends Plugin {
 		if (configChanged.getGroup().equals("calculatorpro")) {
 			reloadTags();
 
-			//todo: check if custom equation changed (and != ""), output to chat (no !calc command needed)
+			//todo: check if custom equation changed (and != last custom equation or blank), output to chat (no !calc command needed)
 			//client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says ", null);
+//			if (configChanged.getKey().equals("customEquation")){
+//				chatMessageManager.queue(
+//						ChatMessageType.GAMEMESSAGE,
+//						"",
+//						"Custom equation updated to: "
+//				);
+//			}
 
 			if (!config.panelActive() && panelActive){
 				clientToolbar.removeNavigation(navButton);
@@ -289,7 +359,7 @@ public class CalculatorProPlugin extends Plugin {
 			}
 		}
 		//check if tag already exists
-		if(configTags.get(newTagString)!=null || lvlTags.get(newTagString)!= null){
+		if(configTags.get(newTagString)!=null || lvlTags.get(newTagString)!= null || SkillTags.get(newTagString)!= null){
 			output = "Error- tag \""+newTagString+"\" already exists";
 			System.out.println(output);
 			return false;
@@ -703,8 +773,10 @@ public class CalculatorProPlugin extends Plugin {
 							components[n]=configTags.get(components[n]);
 						} else if(lvlTags.get(components[n])!=null){
 							components[n]=lvlTags.get(components[n]);
-						} else if(runTimeTags.get(components[n])!=null){
-							components[n]=runTimeTags.get(components[n]);
+						} else if(runTimeTags.get(components[n])!=null) {
+							components[n] = runTimeTags.get(components[n]);
+						} else if(SkillTags.get(components[n])!=null) {
+							components[n] = xpLookup(components[n]);
 						} else{
 							output = "Error- no \""+components[n]+"\" tag found";
 							System.out.println(output);
@@ -824,6 +896,84 @@ public class CalculatorProPlugin extends Plugin {
 				return x;
 			}
 		}.parse();
+	}
+
+	//Lookup current xp for desired skill
+	public String xpLookup(String skill) {
+		switch (skill){
+			case "myattack":
+			case "myatt":
+				return Integer.toString(client.getSkillExperience(Skill.ATTACK));
+			case "myhitpoints":
+			case "myhp":
+				return Integer.toString(client.getSkillExperience(Skill.HITPOINTS));
+			case "mymining":
+			case "mymine":
+				return Integer.toString(client.getSkillExperience(Skill.MINING));
+			case "mystrength":
+			case "mystr":
+				return Integer.toString(client.getSkillExperience(Skill.STRENGTH));
+			case "myagility":
+			case "myagil":
+				return Integer.toString(client.getSkillExperience(Skill.AGILITY));
+			case "mysmithing":
+			case "mysmith":
+				return Integer.toString(client.getSkillExperience(Skill.SMITHING));
+			case "mydefence":
+			case "mydef":
+				return Integer.toString(client.getSkillExperience(Skill.DEFENCE));
+			case "myherblore":
+			case "myherb":
+				return Integer.toString(client.getSkillExperience(Skill.HERBLORE));
+			case "myfishing":
+			case "myfish":
+				return Integer.toString(client.getSkillExperience(Skill.FISHING));
+			case "myranged":
+			case "myranging":
+			case "myrange":
+				return Integer.toString(client.getSkillExperience(Skill.RANGED));
+			case "mythieving":
+			case "mythieve":
+				return Integer.toString(client.getSkillExperience(Skill.THIEVING));
+			case "mycooking":
+			case "mycook":
+				return Integer.toString(client.getSkillExperience(Skill.COOKING));
+			case "myprayer":
+			case "mypray":
+				return Integer.toString(client.getSkillExperience(Skill.PRAYER));
+			case "mycrafting":
+			case "mycraft":
+				return Integer.toString(client.getSkillExperience(Skill.CRAFTING));
+			case "myfiremaking":
+			case "myfm":
+				return Integer.toString(client.getSkillExperience(Skill.FIREMAKING));
+			case "mymagic":
+			case "mymage":
+				return Integer.toString(client.getSkillExperience(Skill.MAGIC));
+			case "myfletching":
+			case "myfletch":
+				return Integer.toString(client.getSkillExperience(Skill.FLETCHING));
+			case "mywoodcutting":
+			case "mywc":
+				return Integer.toString(client.getSkillExperience(Skill.WOODCUTTING));
+			case "myrunecrafting":
+			case "myrc":
+				return Integer.toString(client.getSkillExperience(Skill.RUNECRAFT));
+			case "myslayer":
+			case "myslay":
+				return Integer.toString(client.getSkillExperience(Skill.SLAYER));
+			case "myfarming":
+			case "myfarm":
+				return Integer.toString(client.getSkillExperience(Skill.FARMING));
+			case "myconstruction":
+			case "mycon":
+				return Integer.toString(client.getSkillExperience(Skill.CONSTRUCTION));
+			case "myhunter":
+			case "myhunt":
+				return Integer.toString(client.getSkillExperience(Skill.HUNTER));
+			default:
+				return "Error in xpLookup";
+		}
 	}
 
 	//add new tag & value to runTimeTags

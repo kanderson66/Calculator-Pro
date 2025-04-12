@@ -24,17 +24,28 @@
  */
 package com.calculatorpro.uiSpedwards;
 
+import com.calculatorpro.CalculatorProConfig;
+import com.google.inject.Provides;
+import javax.inject.Inject;
 import javax.swing.JTextField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.calculatorpro.CalculatorProPlugin;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import net.runelite.client.config.ConfigManager;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DisplayField extends JTextField
 {
+    //todo test if effective
+    //adds Calculator Pro to config panel
+    @Provides
+    CalculatorProConfig provideConfig(ConfigManager configManager) {
+        return configManager.getConfig(CalculatorProConfig.class);
+    }
+
     Double result;
     public String previousResult = "0";
     public String input = "";
@@ -141,13 +152,40 @@ public class DisplayField extends JTextField
             return;
         }
         //todo add ability to custom set how many decimals to display from CalculatorProConfig.numDecimals()
-//        CalculatorProConfig config = new CalculatorProConfig() {
+
+//        CalculatorProConfig config2 = new CalculatorProConfig() {
 //            @Override
 //            public int numDecimals() {
 //                return CalculatorProConfig.super.numDecimals();
 //            }
 //        };
-//        System.out.println(config.numDecimals());
+//
+//        //reduce answer to desired # decimal places or less & include commas for easier reading
+//        String format = "#,###";
+//
+//        if (config2.numDecimals() > 0)
+//        {
+//            format += ".";
+//
+//            //limit decimal points to 15 places
+//            if(config2.numDecimals() > 15)
+//            {
+//                for (int n=0; n<15; n++)
+//                {
+//                    format += "#";
+//                }
+//            }
+//            else
+//            {
+//                for (int n=0; n<config2.numDecimals(); n++)
+//                {
+//                    format += "#";
+//                }
+//            }
+//        }
+//        DecimalFormat df = new DecimalFormat(format);
+
+
         //reduce answer to 3 decimal places or less & include commas for easier reading
         DecimalFormat df = new DecimalFormat("#,###.###");
         df.setRoundingMode(RoundingMode.HALF_UP);
