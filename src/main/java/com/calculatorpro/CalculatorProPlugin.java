@@ -278,7 +278,7 @@ public class CalculatorProPlugin extends Plugin {
 
 			//check if tag has name (possibly empty) and value
 			if (split.length != 2){
-				System.out.println("no value");
+			//	System.out.println("no value");
 				continue;
 			}
 			//validate the tag
@@ -295,7 +295,7 @@ public class CalculatorProPlugin extends Plugin {
 
 			//Error with tag value- dont add
 			if (correctedEquation.charAt(0)=='E'){
-				System.out.println(correctedEquation);
+				//System.out.println(correctedEquation);
 				continue;
 			}
 			//add tag
@@ -340,13 +340,13 @@ public class CalculatorProPlugin extends Plugin {
 		//ensure tag has a name
 		if(newTagString.isEmpty()){
 			output = "Error- no tag name";
-			System.out.println(output);
+			//System.out.println(output);
 			return false;
 		}
 		//tag name contains at least 1 letter
 		if(!newTagString.matches(".*[a-z]+.*")){
 			output = "Error- tag name (no letters): \""+newTagString+"\"";
-			System.out.println(output);
+			//System.out.println(output);
 			return false;
 		}
 		//tag name contains only letters and/or #s
@@ -354,20 +354,20 @@ public class CalculatorProPlugin extends Plugin {
 		for (int i = 0; i < len; i++) {
 			if (!Character.isLetterOrDigit(newTagString.charAt(i))) {
 				output = "Error- tag name (contains symbols): \""+newTagString+"\"";
-				System.out.println(output);
+				//System.out.println(output);
 				return false;
 			}
 		}
 		//check if tag already exists
 		if(configTags.get(newTagString)!=null || lvlTags.get(newTagString)!= null || SkillTags.get(newTagString)!= null){
 			output = "Error- tag \""+newTagString+"\" already exists";
-			System.out.println(output);
+			//System.out.println(output);
 			return false;
 		}
 		//config tag overrides tags in runTimeTags
 		if(!isConfigTag && runTimeTags.get(newTagString)!= null){
 			output = "Error- tag \""+newTagString+"\" already exists";
-			System.out.println(output);
+			//System.out.println(output);
 			return false;
 		}
 		//check if tag is reserved
@@ -377,7 +377,7 @@ public class CalculatorProPlugin extends Plugin {
 			case "sin":
 			case "tan":
 				output = "Error- tag \""+newTagString+"\" is reserved for math operations";
-				System.out.println(output);
+				//System.out.println(output);
 				return false;
 			case "last":
 			case "a0":
@@ -391,7 +391,7 @@ public class CalculatorProPlugin extends Plugin {
 			case "a8":
 			case "a9":
 				output = "Error- tag \""+newTagString+"\" is reserved for default tags";
-				System.out.println(output);
+				//System.out.println(output);
 				return false;
 			default:
 				break;
@@ -779,7 +779,7 @@ public class CalculatorProPlugin extends Plugin {
 							components[n] = xpLookup(components[n]);
 						} else{
 							output = "Error- no \""+components[n]+"\" tag found";
-							System.out.println(output);
+							//System.out.println(output);
 							return output;
 						}
 						break;
@@ -1010,7 +1010,7 @@ public class CalculatorProPlugin extends Plugin {
 		String response;
 		//error message received, print error message
 		if (corEqu.charAt(0) == 'E' || corEqu.charAt(0)=='C'){
-			System.out.println(equ + " " + corEqu);
+			//System.out.println(equ + " " + corEqu);
 			response = new ChatMessageBuilder()
 					.append(ChatColorType.NORMAL)
 					.append(equ)
@@ -1018,7 +1018,7 @@ public class CalculatorProPlugin extends Plugin {
 					.append(" "+corEqu)
 					.build();
 		} else if (ans.charAt(0) == 'I') {
-			System.out.println(equ + " Error- cannot divide by 0");
+			//System.out.println(equ + " Error- cannot divide by 0");
 			//build new message
 			response = new ChatMessageBuilder()
 					.append(ChatColorType.NORMAL)
