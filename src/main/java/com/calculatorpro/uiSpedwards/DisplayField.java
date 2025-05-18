@@ -24,27 +24,27 @@
  */
 package com.calculatorpro.uiSpedwards;
 
-import com.calculatorpro.CalculatorProConfig;
-import com.google.inject.Provides;
-import javax.inject.Inject;
+//import com.calculatorpro.CalculatorProConfig;
+//import com.google.inject.Provides;
+//import javax.inject.Inject;
 import javax.swing.JTextField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.calculatorpro.CalculatorProPlugin;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import net.runelite.client.config.ConfigManager;
+//import net.runelite.client.config.ConfigManager;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DisplayField extends JTextField
 {
-    //todo test if effective
-    //adds Calculator Pro to config panel
-    @Provides
-    CalculatorProConfig provideConfig(ConfigManager configManager) {
-        return configManager.getConfig(CalculatorProConfig.class);
-    }
+//    //todo test if effective
+//    //adds Calculator Pro to config panel
+//    @Provides
+//    CalculatorProConfig provideConfig(ConfigManager configManager) {
+//        return configManager.getConfig(CalculatorProConfig.class);
+//    }
 
     Double result;
     public String previousResult = "0";

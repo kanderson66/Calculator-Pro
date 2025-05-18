@@ -84,12 +84,9 @@ public interface CalculatorProConfig extends Config {
 	{
 		return "Call the calculator through the chatbox using the !calc command:" +
 				"\n!calc 2+3\n\n" +
-				"You can create a tag for the result: \n!calc [tagName] 2+3" +
-				"\n\nIf a [tagName] is not provided for the result, an auto-generated name will be supplied\n\n" +
+				"You can create a tag for the result: \n!calc [tagName] 2+3\n\n" +
 				"You can reference tags in your equation:\n" +
 				"!calc 5*tagName+3\n\n" +
-				"Scientific notation is also supported:\n" +
-				"!calc 3.2m+10.3k\n\n" +
 				"Handles complex calculations:\n!calc 5*((tagName+2)-lvl90+1.3m)\n\n" +
 				"For a complete set of included commands and tags, see the “Pre-set Tags and Commands” infobox below"
 				;
@@ -112,15 +109,19 @@ public interface CalculatorProConfig extends Config {
 	default String customTags() {
 		return "tag1=123\n" +
 				"oak=37.5\n" +
-				"example=oak+tag1\n\n" +
+				"xp=oak+tag1\n" +
+				"func(x,y)=x+y*2+x+oak\n\n" +
 				"###\n" +
 				"Insert tags above this line, notes below this line"
 				+"\n\nTags should look like this:\n"
 				+"tagName=###\n\n" +
 				"Where \"tagName\" is at least 1 letter, and can contain letters and numbers, but no symbols"
-				+"\n\nAnd \"###\" is a real number or equation (negative numbers, scientific notation (33k), fractions and decimals are ok)"
 				+"\n\nYou can then reference these tags in your equation\n" +
-				"!calc 4*tagName";
+				"!calc 4*tagName\n\n"
+				+ "Also supports custom functions. Define a function and its varables:\n"
+				+ "func(x,y)=x+y+oak*3\n\n"
+				+ "Then call it in-game, with the desired values:\n" +
+				"!calc func(2,3)";
 	}
 
 	@ConfigSection(
@@ -139,8 +140,7 @@ public interface CalculatorProConfig extends Config {
 	)
 	default String customEquation() {
 		return "[tag] (lvl99-lvl60)/oak\n\n" +
-				"###\nWrite the equation you want to execute on the top line of this textbox. " +
-				"Long equations that wrap onto a new line are ok\n\n" +
+				"###\nWrite the equation you want to execute on the top line of this textbox.\n\n" +
 				"Execute this equation in-game by calling: \n" +
 				"!calc \n" +
 				"in-game with nothing after it";
@@ -161,15 +161,8 @@ public interface CalculatorProConfig extends Config {
 			position = 11
 	)
 	default String presetTags() {
-		return "These tags and commands are pre-set for convenience. Feel free to use any of them in your calculations. \n"
-				+ "Changes to this textbox will have no effect.\n\n"
-				+ "Commands:\n"
-				+ "Remove all user-created tags:\n"
-				+ "!calc !clear\n"
-				+ "Remove a user-created tag:\n"
-				+ "!calc !remove tagName\n\n"
-				+ "Math Functions:\n"
-				+ "Math functions such as ^2, sqrt, sin, cos, tan are also supported:\n"
+		return ""
+				+ "Math functions such as ^2, sqrt, sin, cos, tan are supported:\n"
 				+ "!calc sqrt(9^3)\n\n"
 				+ "Tags:\n"
 				+ "Include this tag to enter the result of the last calculation:\n"
@@ -185,43 +178,51 @@ public interface CalculatorProConfig extends Config {
 				+ "Skill Current xp Tags:\n"
 				+ "Enter your current xp in the desired skill:\n"
 				+ "myatt OR myattack\n"
-				+ "!calc lvl90-myfm"
+				+ "!calc lvl90-myfm\n\n"
+				+ "Commands:\n"
+				+ "Remove all user-created tags:\n"
+				+ "!calc !clear\n\n"
+				+ "Remove a user-created tag:\n"
+				+ "!calc !remove tagName\n\n"
+				+ "List all stored CustomTags or RunTimeTags:\n"
+				+ "!calc !list RunTimeTags\n"
+				+ "!calc !list CustomTags"
 				;
 	}
 
-	@ConfigSection(
-			name = "Update Log",
-			description = "Update Log",
-			position = 12,
-			closedByDefault = true
-	)
-	String updateLogSection = "Update Log";
-	@ConfigItem(
-			keyName = "updateLog",
-			name = "Update Log",
-			description = "Update Log",
-			section = updateLogSection,
-			position = 13
-	)
-	default String updateLog() {
-		return "Apr 2025\n" +
-				"     -Current xp Lookup\n" +
-				"     -Config Panel Updated\n\n" +
-				"Dec 2023\n" +
-				"     -Scientific Notation\n" +
-				"     -lvl100 to lvl126 pre-sets added\n\n" +
-				"Apr 2023\n" +
-				"     -Plugin Created\n\n\n" +
-				"Click 'Reset' button below to get all updated notes and info from developer\n\n" +
-				"NOTE:\n" +
-				"This will delete ALL custom tags, equations and notes you may have stored in any infoboxes in this config panel"
-				;
-	}
+//	@ConfigSection(
+//			name = "Update Log",
+//			description = "Update Log",
+//			position = 12,
+//			closedByDefault = true
+//	)
+//	String updateLogSection = "Update Log";
+//	@ConfigItem(
+//			keyName = "updateLog",
+//			name = "Update Log",
+//			description = "Update Log",
+//			section = updateLogSection,
+//			position = 13
+//	)
+//	default String updateLog() {
+//		return "Apr 2025\n" +
+//				"     -Current xp Lookup\n" +
+//				"     -Config Panel Updated\n\n" +
+//				"Dec 2023\n" +
+//				"     -Scientific Notation\n" +
+//				"     -lvl100 to lvl126 pre-sets added\n\n" +
+//				"Apr 2023\n" +
+//				"     -Plugin Created\n\n\n" +
+//				"Click 'Reset' button below to get all updated notes and info from developer\n\n" +
+//				"NOTE:\n" +
+//				"This will delete ALL custom tags, equations and notes you may have stored in any infoboxes in this config panel"
+//				;
+//	}
 
 	@ConfigSection(
 			name = "Bugs/Improvements",
 			description = "Bugs/Improvements",
-			position = 14,
+			position = 12,
 			closedByDefault = true
 	)
 	String bugsSection = "Bugs/Improvements";
@@ -230,7 +231,7 @@ public interface CalculatorProConfig extends Config {
 			name = "Bugs/Improvements",
 			description = "Bugs/Improvements",
 			section = bugsSection,
-			position = 15
+			position = 13
 	)
 	default String bugsImprovements() {
 		return "Please submit any bugs or improvement requests to:\n\n" +
