@@ -468,7 +468,7 @@ public class CalculatorProPlugin extends Plugin {
             //add tag
             configTags.put(name, value);
 
-            System.out.println("Tag/Func added: " + name + " , " + value);
+            //System.out.println("Tag/Func added: " + name + " , " + value);
 
             //remove tag from runTimeTags if it exists
             if (runTimeTags.get(name) != null) {
@@ -945,7 +945,7 @@ public class CalculatorProPlugin extends Plugin {
 
     //evaluate string math equation
     public static double eval(final String str) {
-        System.out.println("Enter eval: " + str);
+        //System.out.println("Enter eval: " + str);
         return new Object() {
             int pos = -1, ch;
 
@@ -1468,7 +1468,7 @@ public class CalculatorProPlugin extends Plugin {
                     return output;
                 }
                 output = "Error- no \"" + name + "\" tag or function with matching parameters found@&";
-                System.out.println(output);
+                //System.out.println(output);
                 return output;
             }
         } //end if
