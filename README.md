@@ -4,7 +4,7 @@ Supports decimals, positive and negative numbers, math functions (sqrt, sin, cos
 
 ## Features
 ### Custom Tags
-Define tags with a desired value to use in your calculations
+Define tags with a desired value to use in your calculationsfd
 ![Custom_Tags](https://i.imgur.com/X6Lc36R.png)
 
 ### Pre-Set Tags
