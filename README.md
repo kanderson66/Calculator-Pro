@@ -5,6 +5,7 @@ Supports decimals, positive and negative numbers, math functions (sqrt, sin, cos
 ## Features
 ### Custom Tags
 Define tags with a desired value to use in your calculations
+
 ![Custom_Tags](https://i.imgur.com/X6Lc36R.png)
 
 ### Pre-Set Tags
@@ -16,19 +17,23 @@ Several useful pre-set tags allow for quick access use.
 
 ### Custom Functions
 Define a function with variables to calculate during runtime
+
 ![Custom_Functions](https://i.imgur.com/lZf0EFP.png)
 
 ### Complex Calculations
 Handles complex calculations, including nested functions, scientific notation, and follows standard BEDMAS rules
+
 ![Complex_Calculations](https://i.imgur.com/3MjeC1N.png)
 
 ### Custom Equation
 via the side panel, a custom equation calculation will be performed when calling `!calc` with nothing following it. Useful for complex
 or repeated calculations
+
 ![Custom_Equation](https://i.imgur.com/Kv8QWno.png)
 
 ### Side Panel Calculator UI
 Supports decimals, positive and negative numbers, and brackets
+
 ![Panel_Calculator](https://i.imgur.com/E6dHKyn.png)
 
 ### Commands
