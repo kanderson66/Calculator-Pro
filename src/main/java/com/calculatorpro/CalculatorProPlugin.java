@@ -1456,6 +1456,14 @@ public class CalculatorProPlugin extends Plugin {
             //check if is a tag
             if (configTags.get(name) != null) {
                 name = configTags.get(name);
+                //contain tag in brackets if it contains math symbols for proper eval
+                // tag = 5 + 4 needs brackets, otherwise 3*tag  = 3 * 5 + 4
+                for (char c : name.toCharArray()) {
+                    if (c == '+' || c == '-' || c == '*' || c == '/') {
+                        name = "(" + name + ")";
+                        break;
+                    }
+                }
             } else if (lvlTags.get(name) != null) {
                 name = lvlTags.get(name);
             } else if (runTimeTags.get(name) != null) {

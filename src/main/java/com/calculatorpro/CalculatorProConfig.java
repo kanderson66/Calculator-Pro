@@ -110,7 +110,7 @@ public interface CalculatorProConfig extends Config {
 		return "tag1=123\n" +
 				"oak=37.5\n" +
 				"xp=oak+tag1\n" +
-				"func(x,y)=x+y*2+x+oak\n\n" +
+				"func(x,y)=y*2+x+oak\n\n" +
 				"###\n" +
 				"Insert tags above this line, notes below this line"
 				+"\n\nTags should look like this:\n"
