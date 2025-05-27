@@ -15,7 +15,6 @@ Several useful pre-set tags allow for quick access use.
 - Level xp lookup supports all levels from level 1-126 `!calc lvl95`
 - Use any combination of these in your calculations `!calc (lvl99-myherb)/87.5`
 - Quickly use the result of your last calculation `!calc last*3`
-- 
 
 ### Custom Functions
 Define a function with variables to calculate during runtime
