@@ -171,7 +171,11 @@ public class CalculatorProPlugin extends Plugin {
     public void loadSkillTags() {
         SkillTags.put("myattack", "0");
         SkillTags.put("myatt", "0");
+        SkillTags.put("myatk", "0");
         SkillTags.put("myhitpoints", "0");
+        SkillTags.put("myhitpoint", "0");
+        SkillTags.put("myhealth", "0");
+        SkillTags.put("myhit", "0");
         SkillTags.put("myhp", "0");
         SkillTags.put("mymining", "0");
         SkillTags.put("mymine", "0");
@@ -179,19 +183,23 @@ public class CalculatorProPlugin extends Plugin {
         SkillTags.put("mystr", "0");
         SkillTags.put("myagility", "0");
         SkillTags.put("myagil", "0");
+        SkillTags.put("myagi", "0");
         SkillTags.put("mysmithing", "0");
         SkillTags.put("mysmith", "0");
         SkillTags.put("mydefence", "0");
         SkillTags.put("mydef", "0");
         SkillTags.put("myherblore", "0");
         SkillTags.put("myherb", "0");
+        SkillTags.put("myhl", "0");
         SkillTags.put("myfishing", "0");
         SkillTags.put("myfish", "0");
         SkillTags.put("myranged", "0");
         SkillTags.put("myrange", "0");
         SkillTags.put("myranging", "0");
+        SkillTags.put("myrng", "0");
         SkillTags.put("mythieving", "0");
         SkillTags.put("mythieve", "0");
+        SkillTags.put("mythief", "0");
         SkillTags.put("mycooking", "0");
         SkillTags.put("mycook", "0");
         SkillTags.put("myprayer", "0");
@@ -199,20 +207,26 @@ public class CalculatorProPlugin extends Plugin {
         SkillTags.put("mycrafting", "0");
         SkillTags.put("mycraft", "0");
         SkillTags.put("myfiremaking", "0");
+        SkillTags.put("myfire", "0");
         SkillTags.put("myfm", "0");
         SkillTags.put("mymagic", "0");
         SkillTags.put("mymage", "0");
+        SkillTags.put("mymag", "0");
         SkillTags.put("myfletching", "0");
         SkillTags.put("myfletch", "0");
         SkillTags.put("mywoodcutting", "0");
+        SkillTags.put("mywoodcut", "0");
+        SkillTags.put("mywood", "0");
         SkillTags.put("mywc", "0");
         SkillTags.put("myrunecrafting", "0");
         SkillTags.put("myrc", "0");
+        SkillTags.put("myrune", "0");
         SkillTags.put("myslayer", "0");
         SkillTags.put("myslay", "0");
         SkillTags.put("myfarming", "0");
         SkillTags.put("myfarm", "0");
         SkillTags.put("myconstruction", "0");
+        SkillTags.put("myconstruct", "0");
         SkillTags.put("mycon", "0");
         SkillTags.put("myhunter", "0");
         SkillTags.put("myhunt", "0");
@@ -1047,9 +1061,13 @@ public class CalculatorProPlugin extends Plugin {
         switch (skill) {
             case "myattack":
             case "myatt":
+            case "myatk":
                 return Integer.toString(client.getSkillExperience(Skill.ATTACK));
             case "myhitpoints":
             case "myhp":
+            case "myhitpoint":
+            case "myhealth":
+            case "myhit":
                 return Integer.toString(client.getSkillExperience(Skill.HITPOINTS));
             case "mymining":
             case "mymine":
@@ -1059,6 +1077,7 @@ public class CalculatorProPlugin extends Plugin {
                 return Integer.toString(client.getSkillExperience(Skill.STRENGTH));
             case "myagility":
             case "myagil":
+            case "myagi":
                 return Integer.toString(client.getSkillExperience(Skill.AGILITY));
             case "mysmithing":
             case "mysmith":
@@ -1068,6 +1087,7 @@ public class CalculatorProPlugin extends Plugin {
                 return Integer.toString(client.getSkillExperience(Skill.DEFENCE));
             case "myherblore":
             case "myherb":
+            case "myhl":
                 return Integer.toString(client.getSkillExperience(Skill.HERBLORE));
             case "myfishing":
             case "myfish":
@@ -1075,9 +1095,11 @@ public class CalculatorProPlugin extends Plugin {
             case "myranged":
             case "myranging":
             case "myrange":
+            case "myrng":
                 return Integer.toString(client.getSkillExperience(Skill.RANGED));
             case "mythieving":
             case "mythieve":
+            case "mythief":
                 return Integer.toString(client.getSkillExperience(Skill.THIEVING));
             case "mycooking":
             case "mycook":
@@ -1090,18 +1112,23 @@ public class CalculatorProPlugin extends Plugin {
                 return Integer.toString(client.getSkillExperience(Skill.CRAFTING));
             case "myfiremaking":
             case "myfm":
+            case "myfire":
                 return Integer.toString(client.getSkillExperience(Skill.FIREMAKING));
             case "mymagic":
             case "mymage":
+            case "mymag":
                 return Integer.toString(client.getSkillExperience(Skill.MAGIC));
             case "myfletching":
             case "myfletch":
                 return Integer.toString(client.getSkillExperience(Skill.FLETCHING));
             case "mywoodcutting":
             case "mywc":
+            case "mywoodcut":
+            case "mywood":
                 return Integer.toString(client.getSkillExperience(Skill.WOODCUTTING));
             case "myrunecrafting":
             case "myrc":
+            case "myrune":
                 return Integer.toString(client.getSkillExperience(Skill.RUNECRAFT));
             case "myslayer":
             case "myslay":
@@ -1111,6 +1138,7 @@ public class CalculatorProPlugin extends Plugin {
                 return Integer.toString(client.getSkillExperience(Skill.FARMING));
             case "myconstruction":
             case "mycon":
+            case "myconstruct":
                 return Integer.toString(client.getSkillExperience(Skill.CONSTRUCTION));
             case "myhunter":
             case "myhunt":
