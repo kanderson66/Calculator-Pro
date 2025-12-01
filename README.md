@@ -46,11 +46,15 @@ Supports decimals, positive and negative numbers, and brackets
 - `!calc !remove TagName` Removes a single desired tag from RunTime Tags
 - `!calc !list RunTimeTags` Lists all current RunTime tags
 - `!calc !list CustomTags` Lists all current CustomTags
+- `!calc !price item` Uses the ge market price of the item
 
 
 
 
 ## Update Log
+### Dec 2025  v1.1.1
+- !price `!calc 500 * !price raw shark`
+
 ### May 2025  v1.1.0
 - Custom Functions `func(x,y) = x*y`
 - RunTime & CustomTag list viewing `!calc !list CustomTags`
