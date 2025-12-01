@@ -55,6 +55,11 @@ import net.runelite.client.ui.NavigationButton;
 //import javax.imageio.ImageIO;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.api.Skill;    //to get current xp in a skill
+import net.runelite.client.game.ItemManager; //lookup item price & alch
+import net.runelite.http.api.item.ItemPrice; //lookup item price
+import net.runelite.client.config.RuneLiteConfig;
+import net.runelite.api.ItemComposition;    //lookup alch price
+
 ////auto equate
 //import net.runelite.client.chat.ChatMessageManager;
 //import net.runelite.api.ChatMessageType;
@@ -62,7 +67,7 @@ import net.runelite.api.Skill;    //to get current xp in a skill
 @PluginDescriptor(
         name = "Calculator Pro",
         description = "Perform calculations using the side panel or in-game chat commands",
-        tags = {"calculator", "math", "chat", "command"}
+        tags = {"calculator", "math", "chat", "command", "text"}
 )
 public class CalculatorProPlugin extends Plugin {
     //calc panel from Spedwards
@@ -76,12 +81,18 @@ public class CalculatorProPlugin extends Plugin {
     private ChatCommandManager chatCommandManager;
     @Inject
     private Client client;
+    @Inject
+    private ItemManager itemManager;
+    @Inject
+    private RuneLiteConfig runeLiteConfig;
 
 //	//auto equate
 //	@Inject
 //	private ChatMessageManager chatMessageManager;
 
     private static final String CALCULATE_STRING = "!calc";
+    private static final String PRICE_COMMAND_STRING = "!price";
+    private static final String ALCH_COMMAND_STRING = "!alch";
 
     //store xp values of each lvl (lvl 1-126)
     final HashMap<String, String> lvlTags = new HashMap<>();
@@ -291,6 +302,14 @@ public class CalculatorProPlugin extends Plugin {
                 break;
             }
             line = line.toLowerCase();
+            
+            if (line.contains(PRICE_COMMAND_STRING)) {
+                line = priceLookup(line, PRICE_COMMAND_STRING);
+
+                if (line.charAt(0) == 'E') {
+                    continue;
+                }
+            }
             line = line.replaceAll("\\s", "");
             //Split string between tag & value
             String[] lineSplit = line.split("=");
@@ -491,7 +510,6 @@ public class CalculatorProPlugin extends Plugin {
         }
     }
 
-
     //load equation from Config text box
     private void loadEquation(String textbox) {
         //add a new line incase user has equation on 1 line w/o any new lines
@@ -504,8 +522,20 @@ public class CalculatorProPlugin extends Plugin {
             return;
         }
 
-        //remove any capitals and whitespaces in equation
+        //remove any capitals
         customEquation = customEquation.toLowerCase();
+
+        //replace !price keyword with value
+        if (customEquation.contains(PRICE_COMMAND_STRING)) {
+            //todo have message from calculate = original text in textbox
+            customEquation = priceLookup(customEquation, PRICE_COMMAND_STRING);
+
+            if (customEquation.charAt(0) == 'E') {
+                customEquation = "Error- Custom Equation !price invalid";
+                return;
+            }
+        }
+        //remove whitespace
         customEquation = customEquation.replaceAll("\\s", "");
     }
 
@@ -583,8 +613,84 @@ public class CalculatorProPlugin extends Plugin {
         return true;
     }
 
+    //5 + 3 * !price uncut emerald + 2
+    private String priceLookup(String equation, String LOOKUP) {
+        List <String> newEquation = tokenize(equation);
+        for (int n = 0; n < newEquation.size(); n++) {
+            if (newEquation.get(n).contains(LOOKUP)) {
+
+                //get beginning of element, up to LOOKUP
+                String header = newEquation.get(n).substring(0, newEquation.get(n).indexOf(LOOKUP));
+
+                String message = newEquation.get(n);
+                //!price uncut emerald
+                //if !calc !price item, tokenizer leave calc in, need include that
+                int offset = message.indexOf(LOOKUP);
+
+                //!price with no item name after
+                if (message.trim().length() <= LOOKUP.length() + offset) {
+                    return "Error- no item after " + LOOKUP;
+                }
+
+                //+1 to account for space after !price
+                String search = message.substring(LOOKUP.length() + offset).trim();
+                List<ItemPrice> results = itemManager.search(search);
+
+                if (!results.isEmpty()) {
+                    ItemPrice item = retrieveFromList(results, search);
+
+                    //get alch price
+                    int itemId = item.getId();
+                    //get item price
+                    int itemPrice = runeLiteConfig.useWikiItemPrices() ? itemManager.getWikiPrice(item) : item.getPrice();
+
+                    //todo alch compatibility
+                    //ItemComposition itemComposition = itemManager.getItemComposition(itemId);
+                    //final int alchPrice = itemComposition.getHaPrice();
+
+                    String value = "";
+                    if (LOOKUP.equals(PRICE_COMMAND_STRING)) {
+                        value = String.valueOf(itemPrice);
+                    }
+                    else if (LOOKUP.equals(ALCH_COMMAND_STRING)) {
+                        //value = String.valueOf(alchPrice);
+                    }
+
+                    value = header + value;
+
+                    newEquation.remove(n);
+                    newEquation.add(n, value);
+                }
+                else {
+                    return "Error- cant find item " + search;
+                }
+            }
+        }
+        return String.join("", newEquation);
+    }
+
+    private ItemPrice retrieveFromList(List<ItemPrice> items, String originalInput)
+    {
+        ItemPrice shortest = null;
+        for (ItemPrice item : items)
+        {
+            if (item.getName().toLowerCase().equals(originalInput.toLowerCase()))
+            {
+                return item;
+            }
+
+            if (shortest == null || item.getName().length() < shortest.getName().length())
+            {
+                shortest = item;
+            }
+        }
+
+        // Take a guess
+        return shortest;
+    }
+
     //perform all checks, commands, calculations and tagging
-    private void calculate(ChatMessage chatMessage, String equation) {
+    private void calculate(ChatMessage chatMessage, String message) {
         //command turned off
         if (!config.calcCommand()) {
             return;
@@ -597,23 +703,51 @@ public class CalculatorProPlugin extends Plugin {
         //reload custom tags & equation incase values in tags changed (gained xp, etc)
         reloadTags();
 
-        equation = equation.toLowerCase();
+        String equation = message.toLowerCase();
+        message = message.substring(CALCULATE_STRING.length());
+
+        //replace price lookup with price
+        if (equation.contains(PRICE_COMMAND_STRING)) {
+            equation = priceLookup(equation, PRICE_COMMAND_STRING);
+
+            if (equation.charAt(0) == 'E') {
+                build(message, equation, answer.toString(), chatMessage);
+                return;
+            }
+        }
+
+        //replace alch lookup with alch amount (to be implemented later)
+        if (equation.contains(ALCH_COMMAND_STRING)) {
+            equation = priceLookup(equation, ALCH_COMMAND_STRING);
+
+            if (equation.charAt(0) == 'E') {
+                build(message, equation, answer.toString(), chatMessage);
+                return;
+            }
+        }
+
+
         //remove any whitespaces in equation	//DOESNT remove ,
         equation = equation.replaceAll("\\s", "");
 
         //remove !calc beginning
-        String[] split = equation.split("!calc");
+        String[] split = equation.split(CALCULATE_STRING);
 
         //check if nothing entered after !calc
         switch (split.length) {
             case 0:
                 //check if Custom Equation was valid
                 if (customEquation.charAt(0) == 'E') {
-                    build(equation, customEquation, answer.toString(), chatMessage);
+                    build(message, customEquation, answer.toString(), chatMessage);
                     return;
                 }
-                //get equation from Custom Equation textbox in Config Panel
+                //get verified equation
                 equation = customEquation;
+
+                //get equation from Custom Equation textbox in Config Panel
+                message = config.customEquation();
+                message += "\n";    //add new line incase only 1 line in panel
+                message = message.split("\n", 2)[0].trim();    //grab only 1st line of panel
                 break;
             case 2:
                 //success
@@ -622,7 +756,7 @@ public class CalculatorProPlugin extends Plugin {
                 break;
             default:
                 //should never reach, but just for safety
-                build(equation, "Error- invalid entry", answer.toString(), chatMessage);
+                build(message, "Error- invalid entry", answer.toString(), chatMessage);
                 return;
         }
 
@@ -631,7 +765,7 @@ public class CalculatorProPlugin extends Plugin {
             equation = checkHeaders(equation);
             if (output.charAt(0) == 'E' || output.equals("Command Complete") || output.contains("Tags")) {
                 //print output
-                build(equation, output, answer.toString(), chatMessage);
+                build(message, output, answer.toString(), chatMessage);
                 return;
             }
         } //equation is removed of !calc and any !commands or [tagName]
@@ -647,7 +781,7 @@ public class CalculatorProPlugin extends Plugin {
         //Check for error message
         if (correctedEquation.contains("Error")) {
             correctedEquation = errorStrip(correctedEquation);
-            build(equation, correctedEquation, answer.toString(), chatMessage);
+            build(message, correctedEquation, answer.toString(), chatMessage);
             return;
         }
 
@@ -657,7 +791,7 @@ public class CalculatorProPlugin extends Plugin {
 
         //check for divide by 0 error message ("Infinity")
         if (answer.toString().charAt(0) == 'I') {
-            build(equation, correctedEquation, answer.toString(), chatMessage);
+            build(message, correctedEquation, answer.toString(), chatMessage);
             return;
         }
 
@@ -685,7 +819,7 @@ public class CalculatorProPlugin extends Plugin {
         addNewTag(df.format(answer));
 
         //output results
-        build(equation, correctedEquation, "[" + newTagName + "] " + df.format(answer), chatMessage);
+        build(message, correctedEquation, "[" + newTagName + "] " + df.format(answer), chatMessage);
     }
 
     //check !command or [newTag] are valid
@@ -1559,6 +1693,4 @@ public class CalculatorProPlugin extends Plugin {
         }
         return components;
     }
-
 }
-
