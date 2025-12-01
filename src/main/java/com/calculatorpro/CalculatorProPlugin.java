@@ -279,7 +279,6 @@ public class CalculatorProPlugin extends Plugin {
             }
         }
     }
-
     //clear current config panel Tags & equation & update with new tags from Config Text boxes
     private void reloadTags() {
         configTags.clear();
@@ -527,7 +526,7 @@ public class CalculatorProPlugin extends Plugin {
 
         //replace !price keyword with value
         if (customEquation.contains(PRICE_COMMAND_STRING)) {
-            //todo have message from calculate = original text in textbox
+
             customEquation = priceLookup(customEquation, PRICE_COMMAND_STRING);
 
             if (customEquation.charAt(0) == 'E') {
@@ -573,17 +572,27 @@ public class CalculatorProPlugin extends Plugin {
             }
         }
         //check if tag already exists
-        if (configTags.get(newTagString) != null || lvlTags.get(newTagString) != null || SkillTags.get(newTagString) != null) {
-            output = "Error- tag \"" + newTagString + "\" already exists";
+        if (configTags.get(newTagString) != null)  {
+            output = "Error- tag \"" + newTagString + "\" already exists in configTags";
             //System.out.println(output);
             return false;
         }
-        //config tag overrides tags in runTimeTags
-        if (!isConfigTag && runTimeTags.get(newTagString) != null) {
-            output = "Error- tag \"" + newTagString + "\" already exists";
+        if (lvlTags.get(newTagString) != null)  {
+            output = "Error- tag \"" + newTagString + "\" already exists in lvlTags";
             //System.out.println(output);
             return false;
         }
+        if (SkillTags.get(newTagString) != null)  {
+            output = "Error- tag \"" + newTagString + "\" already exists in SkillTags";
+            //System.out.println(output);
+            return false;
+        }
+        //config tag overrides tags in runTimeTags **all tags override runTimeTags
+//        if (!isConfigTag && runTimeTags.get(newTagString) != null) {
+//            output = "Error- tag \"" + newTagString + "\" already exists";
+//            //System.out.println(output);
+//            return false;
+//        }
         //check if tag is reserved
         switch (newTagString) {
             case "sqrt":
@@ -873,7 +882,7 @@ public class CalculatorProPlugin extends Plugin {
 
                     //tagName not found in runTimeTags (cant remove tags from other HashMaps)
                     if (runTimeTags.get(split[1]) == null) {
-                        output = "Error- tagName not found. Usage: !remove tagName";
+                        output = "Error- tagName not found in runTimeTags. Usage: !remove tagName";
                         return input;
                     }
                     //remove the desired tag from runTimeTags
@@ -1301,6 +1310,10 @@ public class CalculatorProPlugin extends Plugin {
 
         //add new tag & value
         else {
+            //replace old runTimeTag with new
+            if (runTimeTags.get(newTagName) != null) {
+                runTimeTags.remove(newTagName);
+            }
             runTimeTags.put(newTagName, value);
         }
 
