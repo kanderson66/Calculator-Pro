@@ -180,6 +180,8 @@ public interface CalculatorProConfig extends Config {
 				+ "myatt OR myattack\n"
 				+ "!calc lvl90-myfm\n\n"
 				+ "Commands:\n"
+                + "Use the ge market price for an item: \n"
+                + "!calc 500*!price raw shark\n\n"
 				+ "Remove all user-created tags:\n"
 				+ "!calc !clear\n\n"
 				+ "Remove a user-created tag:\n"
