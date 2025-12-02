@@ -162,8 +162,8 @@ public interface CalculatorProConfig extends Config {
 	)
 	default String presetTags() {
 		return ""
-				+ "Math functions such as ^2, sqrt, sin, cos, tan are supported:\n"
-				+ "!calc sqrt(9^3)\n\n"
+				+ "Math functions such as %, ^2, sqrt, sin, cos, tan are supported:\n"
+				+ "!calc sqrt(9^3)+5%\n\n"
 				+ "Tags:\n"
 				+ "Include this tag to enter the result of the last calculation:\n"
 				+ "last\n"

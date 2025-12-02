@@ -1,6 +1,6 @@
 # Calculator Pro
 A text-based calculator featuring both panel and in-game chat functionality through the !calc command. 
-Supports decimals, positive and negative numbers, math functions (sqrt, sin, cos, tan, ^2), brackets, custom tags and functions, and some commands.
+Supports decimals, positive and negative numbers, math functions (%, sqrt, sin, cos, tan, ^2), brackets, custom tags and functions, and some commands.
 
 ## Features
 ### Custom Tags
@@ -13,7 +13,8 @@ Define tags with a desired value to use in your calculations
 Several useful pre-set tags allow for quick access use.
 - Current xp lookup supports all skills `!calc myherb`
 - Level xp lookup supports all levels from level 1-126 `!calc lvl95`
-- Use any combination of these in your calculations `!calc (lvl99-myherb)/87.5`
+- GE market price lookup of any item `!calc !price shark`
+- Use any combination of these in your calculations `!calc (lvl99-myherb)/87.5*!price ranarr`
 - Quickly use the result of your last calculation `!calc last*3`
 
 ### Custom Functions
@@ -42,18 +43,18 @@ Supports decimals, positive and negative numbers, and brackets
 
 
 ### Commands
+- `!calc !price shark` Uses the ge market price of any item
 - `!calc !clear` Clears all current RunTime Tags
 - `!calc !remove TagName` Removes a single desired tag from RunTime Tags
 - `!calc !list RunTimeTags` Lists all current RunTime tags
 - `!calc !list CustomTags` Lists all current CustomTags
-- `!calc !price item` Uses the ge market price of the item
 
 
 
 
 ## Update Log
 ### Dec 2025  v1.1.1
-- !price `!calc 500 * !price raw shark`
+- !price and % `!calc 500 * (!price raw shark + 5%)`
 
 ### May 2025  v1.1.0
 - Custom Functions `func(x,y) = x*y`

@@ -713,7 +713,7 @@ public class CalculatorProPlugin extends Plugin {
         reloadTags();
 
         String equation = message.toLowerCase();
-        message = message.substring(CALCULATE_STRING.length());
+        message = message.substring(CALCULATE_STRING.length()).trim();
 
         //replace price lookup with price
         if (equation.contains(PRICE_COMMAND_STRING)) {
@@ -928,7 +928,7 @@ public class CalculatorProPlugin extends Plugin {
         //check no illegal characters or spaces
         //remove any math symbols
         Pattern p = Pattern.compile("(.{1})");
-        Matcher m = p.matcher("(),.+-/*^");
+        Matcher m = p.matcher("(),.+-/*^%");
         String temp = input.replaceAll(m.replaceAll("\\\\$1\\|"), "");
 
 
@@ -943,6 +943,74 @@ public class CalculatorProPlugin extends Plugin {
         //split equation into individual components
         //String[] components = input.split("(?<=[-+*/^()\\[\\]])|(?=[-+*/^()\\[\\]])");
         List<String> components = tokenize(input);
+
+        //todo % at start of func or tag   tax=5%    func(5%)
+        if (components.contains("%")) {
+            for (int n = 0; n < components.size(); n++) {
+                if (components.get(n).equals("%")) {
+                    if (n == 0) {
+                        return "Error- no # before %";
+                    }
+                    try {
+                        //check if % is after a #  5.3%
+                        Double.parseDouble(components.get(n-1));
+                    } catch (NumberFormatException e) {
+                        return "Error- incorrect % usage";
+                    }
+                    //!calc 50%    = 0.5
+                    if (n == 1) {
+                        return "Error- cant have % as first value";
+                    }
+                    if (n == 2) {
+                        return "Error- missing value at beginning of equation";
+                    }
+                    //change # and math symbols into required forms
+                    switch (components.get(n-2)){
+                        case "+":
+                            components.set(n - 2, "*");
+                            components.set(n - 1, String.format("%.3f", 1 + Double.parseDouble(components.get(n -1)) / 100));
+                            break;
+                        case "-":   //5 * -5%  >  5 * *0.95     want 5 * -0.95
+                            switch (components.get(n-3)) {
+                                case "+":
+                                    components.set(n - 3, "*");
+                                    components.set(n - 2, String.format("%.3f", 1 - Double.parseDouble(components.get(n -1)) / 100));
+                                    components.remove(n - 1);
+                                    n -= 1;
+                                    break;
+                                case "-":
+                                    components.set(n - 3, "*");
+                                    components.set(n - 2, String.format("%.3f", 1 + Double.parseDouble(components.get(n -1)) / 100));
+                                    components.remove(n - 1);
+                                    n -= 1;
+                                    break;
+                                case "*":
+                                case "/":
+                                    components.set(n - 1, String.format("%.3f", Double.parseDouble(components.get(n -1)) / 100));
+                                    break;
+                                default:
+                                    components.set(n - 2, "*");
+                                    components.set(n - 1, String.format("%.3f", 1 - Double.parseDouble(components.get(n -1)) / 100));
+                                    break;
+                        }
+                            break;
+                        case ")":
+                        case "*":
+                        case "/":
+                            components.set(n - 1, String.format("%.3f", Double.parseDouble(components.get(n -1)) / 100));
+                            break;
+                        case "(":
+                        case ",":
+                            return "Error- % cant be first value after \"(\" or \",\"";
+                        default:
+                            return "Error- invalid use of %";
+
+                    }
+                    components.remove(n);
+                    n -= 1;
+                }
+            }
+        }
 
         if (components.contains("(") || components.contains(")")) {
             //check # ) never above # (, and add ) if needed
@@ -1397,7 +1465,7 @@ public class CalculatorProPlugin extends Plugin {
 //        return tokens;
 
         // Split while keeping the delimiters (math operators)
-        String[] rawTokens = input.split("(?=[+\\-*/()^,])|(?<=[+\\-*/()^,])");
+        String[] rawTokens = input.split("(?=[+\\-*/()^,%])|(?<=[+\\-*/()^,%])");
 
         // Remove empty strings and trim whitespace
         List<String> tokens = new ArrayList<>();
